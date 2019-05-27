@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1558948975032.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3735834914",
+    "id" : "AB107F20",
+    "lastKnownWriteTime" : 1558952800,
+    "last_content_update" : 1558952800134,
+    "path" : "C:/Users/SErgio/OneDrive/r_projects/Clustering_notas_y_ejemplos/02-clustering_algorithms.Rmd",
+    "project_path" : "02-clustering_algorithms.Rmd",
+    "properties" : {
+        "cursorPosition" : "43,18",
+        "scrollLine" : "6"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

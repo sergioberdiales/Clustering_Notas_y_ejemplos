@@ -1,0 +1,19 @@
+---
+title: "Clustering - Notas y ejemplos"
+author: "Sergio Berdiales"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook: default
+  #bookdown::pdf_book: default
+---
+
+# Introducción {-}
+
+Notas personales sobre qué es el Clustering y sus técnicas y aplicaciones más habituales. Es un trabajo en curso, por lo que es posible que encuentres secciones aún sin desarrollar. 
+
+Todo el código y los datos empleados se encuentran en este repositorio de Github. Las colaboraciones serán muy bien recibidas. https://github.com/sergioberdiales/Clustering_Notas_y_ejemplos. 
+
+Cualquier consulta, queja o sugerencia me la puedes enviar vía twitter [twitter.com/SergioBerdiales](https://twitter.com/SergioBerdiales)
+
+  

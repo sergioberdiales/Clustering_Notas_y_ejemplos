@@ -1,0 +1,35 @@
+# ¿Qué es el Clustering?
+
+## Definición
+
+El clustering es una técnica de aprendizaje automático no supervisado que consiste en agrupar conjuntos de datos según su cercanía o similitud. En el libro "Data Science for Business" de (Foster Provost & Tom Fawcett) lo definen de la siguiente forma:
+
+"Clustering attempts to group individuals in a population together by their similarity, but not driven by any specific purpose. An example clustering question would be: “Do our customers form natural groups or segments?” Clustering is useful in preliminary domain exploration to see which natural groups exist because these groups in turn may suggest other data mining tasks or approaches. Clustering also is used as input to decision-making processes focusing on questions such as: What products should we offer or develop? How should our customer care teams (or sales teams) be structured?"
+
+En el capítulo 6 de este libro hay una buena introducción a esta técnica y a sus aplicaciones. 
+
+Otra definición. Esta de un post de Datacamp: 
+
+"Clustering is an unsupervised learning technique. It is the task of grouping together a set of objects in a way that objects in the same cluster are more similar to each other than to objects in other clusters. Similarity is an amount that reflects the strength of relationship between two data objects. Clustering is mainly used for exploratory data mining. It is used in many fields such as machine learning, pattern recognition, image analysis, information retrieval, bio-informatics, data compression, and computer graphics."
+
+## Tipos de técnicas
+
+## Concepto de similitud
+
+## Aplicaciones
+
+## Problemas
+
+## Referencias 
+
+- [Documentación de scikit-learn](https://scikit-learn.org/stable/modules/clustering.html)
+- [K-Means Clustering in R Tutorial](https://www.datacamp.com/community/tutorials/k-means-clustering-r) (Blog de Datacamp)
+- [The 5 Clustering Algorithms Data Scientists Need to Know](https://towardsdatascience.com/the-5-clustering-algorithms-data-scientists-need-to-know-a36d136ef68)(Blog "Towards Data Science")
+
+
+```{r , warning= FALSE, message= FALSE}
+library(tidyverse)
+library(gridExtra)
+```
+
+

@@ -1,0 +1,8 @@
+"0",""
+"0","ggplot(got_ratings, aes(x = `Episode Number`, y = `Imdb Rating`, color = as.factor(Season))) +"
+"0","                    geom_point() +"
+"0","                    labs(colour = ""Temporadas"","
+"0","                         x = ""Número de episodio"", "
+"0","                         y = ""Promedio valoración IMDb"", "
+"0","                         title = ""Juego de Tronos - Promedio valoraciones IMDb por episodio"") +"
+"0","                   geom_text(aes(label=ifelse(`Imdb Rating` < 7,`Episode Name`,'')),hjust= 0.8,vjust= -2, show_guide = F)"
