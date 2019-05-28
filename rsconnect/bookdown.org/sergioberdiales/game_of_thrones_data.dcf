@@ -5,8 +5,8 @@ account: sergioberdiales
 server: bookdown.org
 hostUrl: https://bookdown.org/__api__
 appId: 2562
-bundleId: 10274
+bundleId: 10343
 url: https://bookdown.org/sergioberdiales/game_of_thrones_data/
-when: 1558381467.80925
+when: 1558962833.65256
 asMultiple: FALSE
 asStatic: FALSE

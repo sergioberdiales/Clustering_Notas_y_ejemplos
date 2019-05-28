@@ -1,5 +1,0 @@
-"0","data14 <- read_rds(file =""data/data14.rds"")
-"
-"2","Error in read_rds(file = ""data/data14.rds"") : 
-  unused argument (file = ""data/data14.rds"")
-"

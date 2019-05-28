@@ -1,0 +1,165 @@
+# Algoritmos de Clustering
+
+## K-means. Caso práctico con R. Datos: Uber.
+
+El primer ejemplo que voy a incluir de K-Means está desarrollado y explicado en un post en el blog de Datacamp: [K-Means Clustering in R Tutorial](https://www.datacamp.com/community/tutorials/k-means-clustering-r)
+
+La autora del post explica cómo aplicar el algoritmo K-Means sobre información de Uber con R.
+
+NOTA: Finalmente descarto este análisis como ejemplo de clustering porque no parece que tenga mucho sentido el problema que pretendía solucionar la autora, identificar los barrios de Nueva York, con las herramientas empleadas: un clustering basado en los datos de longitud y latitud de información de recogida de Uber.
+
+
+```{r , warning= FALSE, message= FALSE}
+library(tidyverse)
+library(lubridate)
+library(gridExtra)
+library(VIM)
+library(ggmap)
+```
+
+
+Primero importamos los datos: 
+```{r , warning= FALSE, message= FALSE}
+#apr14 <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/uber-tlc-foil-response/master/uber-trip-data/uber-raw-data-apr14.csv")
+#may14 <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/uber-tlc-foil-response/master/uber-trip-data/uber-raw-data-may14.csv")
+#jun14 <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/uber-tlc-foil-response/master/uber-trip-data/uber-raw-data-jun14.csv")
+#jul14 <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/uber-tlc-foil-response/master/uber-trip-data/uber-raw-data-jul14.csv")
+#aug14 <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/uber-tlc-foil-response/master/uber-trip-data/uber-raw-data-aug14.csv")
+#sep14 <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/uber-tlc-foil-response/master/uber-trip-data/uber-raw-data-sep14.csv")
+```
+
+Unimos los datasets en uno solo
+
+```{r , warning= FALSE, message= FALSE}
+
+#data14 <- bind_rows(apr14, may14, jun14, jul14, aug14, sep14)
+
+```
+
+Salvamos como objeto RDS (ocupa menos que en csv y así me aseguro de no superar el límite de Github)
+
+```{r , warning= FALSE, message= FALSE}
+
+#saveRDS(data14, file = "data/data14.rds")
+
+```
+
+Cargamos los datos
+```{r , warning= FALSE, message= FALSE}
+
+data14 <- read_rds("data/data14.rds")
+
+```
+
+El dataset contiene información generada por el servicio de trasporte de Uber en la ciudad de Nueva York. La tabla incluye información referida a recogidas como la fecha, la hora y los datos de longitud y latitud de recogida.  
+
+Nueva York tiene 5 barrios. Con este ejercicio se trata de identificar estos barrios a través del algoritmo de clustering K-means. 
+
+Echamos un vistazo a los datos que ya tenemos cargados
+
+```{r , warning= FALSE, message= FALSE}
+
+head(data14)
+
+```
+
+Descripción de las variables: 
+- Date.Time: la fecha y la hora de recogida.
+- Lat: la latitud de la recogida.
+- Lon: la longitud de la recogida.
+- Base: El código de la base de recogida. 
+
+
+### Preparación de los datos
+
+La autora del post utiliza la función "aggr" de la librería "VIM" para revisar la presencia o no de NAs. 
+
+```{r , warning= FALSE, message= FALSE}
+
+aggr(data14)
+
+```
+
+Como vemos en el gráfico hemos tenido suerte y todos los valores están correctamente completados. Esta no suele ser la regla.
+
+No conocía esta librería. Pero lo anterior lo podríamos haber hecho simplemente ejecutando un "summary" sobre la tabla y viendo que no localizaba ni un sólo NA (y muchísimo más rápido). Pero la verdad es que visualmente es mucho mejor y además añade los porcentajes de NAs. Me la apunto.
+```{r , warning= FALSE, message= FALSE}
+summary(data14)
+```
+
+Para poder incluir la información de fecha y hora en el algoritmo de clusterización vamos a tener que separar los componentes del campo Date.Time y transformarlos en factores. Para ello utilizaremos funciones de la librería "lubridate". 
+
+Tranformamos el campo Date.Time a formato fecha-hora y posteriormente vamos creando las nuevas variables con el mes, el día, etc.
+```{r , warning= FALSE, message= FALSE}
+
+data14$Date.Time <- mdy_hms(data14$Date.Time)
+data14$Month <- factor(month(data14$Date.Time))
+data14$Day <- factor(day(data14$Date.Time))
+data14$Weekday <- factor(wday(data14$Date.Time))
+data14$Hour <- factor(hour(data14$Date.Time))
+data14$Minute <- factor(minute(data14$Date.Time))
+data14$Second <- factor(second(data14$Date.Time))
+
+```
+
+Vemos cómo queda la tabla resultante.
+
+```{r , warning= FALSE, message= FALSE}
+
+head(data14)
+
+```
+Tiene buena pinta. Ejecutamos de nuevo un "summary" para asegurarnos.
+
+```{r , warning= FALSE, message= FALSE}
+
+summary(data14)
+
+```
+Observando el resultado del "summary" no aparece nada raro. Aunque tendremos que ir un poco más allá con las variables "Day", "Hour" y "Minute", porque "summary" sólo ofrece los conteos de los 6 valores más frecuentes (lo único que la variable "Second" no ofrece ninguna información útil, ya que aparece como "0" en todos los registros)
+
+Para ello simplemente pinto estas tres variables con gráficos de barras.
+
+```{r , warning= FALSE, message= FALSE}
+
+day_plot <- ggplot(data14, aes(x = Day)) +
+            geom_bar()
+
+hour_plot <- ggplot(data14, aes(x = Hour)) +
+            geom_bar()
+
+minute_plot <- ggplot(data14, aes(x = Minute)) +
+            geom_bar()
+
+
+grid.arrange(day_plot,
+             hour_plot,
+             minute_plot,
+             ncol = 1) 
+
+```
+Observando los gráficos tampoco parece que haya nada que nos atraiga especialmente la atención. Así que seguimos con el análisis.
+
+Para crear los clusters vamos a utilizar la función kmeans() de R. Como el objetivo de la autora del post es identificar mediante este ejercicio los 5 barrios de Nueva York el dilema de que valor k (número de clusters a obtener) a fijar ya está resuelto. Las únicas variables que utiliza inicialmente son las geográficas, "lat" y "lon". 
+
+```{r , warning= FALSE, message= FALSE}
+set.seed(20)
+clusters <- kmeans(data14[,2:3], 5)
+
+# Añadimos una columna a data14 llamada "Borough" con su correspondiente número de cluster
+data14$Borough <- as.factor(clusters$cluster)
+
+```
+Echamos un vistazo al objeto "clusters"
+```{r , warning= FALSE, message= FALSE}
+str(clusters)
+```
+
+```{r , warning= FALSE, message= FALSE}
+library(ggmap)
+
+NYCMap <- get_map("New York", zoom = 10)
+ggmap(NYCMap) + geom_point(aes(x = Lon[], y = Lat[], colour = as.factor(Borough)),data = data14) +
+  ggtitle("NYC Boroughs using KMean")
+```
+
